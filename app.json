@@ -26,6 +26,16 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [["react-native-libsodium", {}]]
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      ["react-native-libsodium", {}]
+    ]
   }
 }
