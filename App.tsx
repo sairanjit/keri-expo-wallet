@@ -1,20 +1,33 @@
-import { StatusBar } from "expo-status-bar"
-import { StyleSheet, Text, View } from "react-native"
+import "./shim"
+import "./globals"
+import React from "react"
+import { Button, SafeAreaView, StyleSheet } from "react-native"
+import signify from "signify-ts"
 
-export default function App() {
+function App(): React.JSX.Element {
+  const test = async () => {
+    try {
+      await signify.ready()
+      const passcode = signify.randomPasscode()
+
+      console.log("Passcode : ", passcode)
+    } catch (error) {
+      console.log("Error", error)
+    }
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Button title="Test signify" onPress={test} />
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
 })
+
+export default App
