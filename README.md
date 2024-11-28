@@ -1,49 +1,21 @@
 # keri-expo-wallet
 
-Steps
+Steps to run
 
-1. Add `react-native-libsodium` to the project
-
-```bash
-pnpm add react-native-libsodium
-```
-
-2. update `app.json` with `react-native-libsodium` plugin
-
-```json
-{
-  "expo": {
-    "plugins": [["react-native-libsodium", {}]]
-  }
-}
-```
-
-3. Add `signify-ts` to the project
+1. Install all dependencies
 
 ```bash
-pnpm add signify-ts
-
-or
-
-pnpm add signify-ts@github:sairanjit/signify-ts#bb6d50c01f87d862fab6254e90adf445cdb923fc
+pnpm install
 ```
 
-4. Add `shim.js` to the project
+2. Run the prebuild step
 
-5. Add `globals.js` to the project
-
-```js
-global.TextEncoder = require("text-encoding").TextEncoder
+```bash
+pnpm prebuild
 ```
 
-6. Add `package.json` scripts
+3. Run the app
 
-```json
-{
-  "scripts": {
-    "postinstall": "npx rn-nodeify --install crypto,process,stream,events,module,util --hack"
-  }
-}
+```bash
+pnpm android
 ```
-
-7.
