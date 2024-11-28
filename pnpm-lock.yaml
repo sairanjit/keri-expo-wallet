@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  libsodium-wrappers-sumo: github:sairanjit/react-native-libsodium#632e13cd98520f5e04b64cb8ad3b70c746db395e
+  libsodium-wrappers-sumo: github:sairanjit/react-native-libsodium#9f779e5ba63e90743421bc1e7460692f529fa2a2
 
 importers:
 
@@ -48,8 +48,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(asyncstorage-down@4.2.0)
       react-native-libsodium:
-        specifier: github:sairanjit/react-native-libsodium#632e13cd98520f5e04b64cb8ad3b70c746db395e
-        version: https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/632e13cd98520f5e04b64cb8ad3b70c746db395e(react-native@0.76.3(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
+        specifier: github:sairanjit/react-native-libsodium#9f779e5ba63e90743421bc1e7460692f529fa2a2
+        version: https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/9f779e5ba63e90743421bc1e7460692f529fa2a2(react-native@0.76.3(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
       react-native-randombytes:
         specifier: ^3.6.1
         version: 3.6.1
@@ -3057,8 +3057,8 @@ packages:
     peerDependencies:
       asyncstorage-down: '>=3.0.0 <5.0.0'
 
-  react-native-libsodium@https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/632e13cd98520f5e04b64cb8ad3b70c746db395e:
-    resolution: {tarball: https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/632e13cd98520f5e04b64cb8ad3b70c746db395e}
+  react-native-libsodium@https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/9f779e5ba63e90743421bc1e7460692f529fa2a2:
+    resolution: {tarball: https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/9f779e5ba63e90743421bc1e7460692f529fa2a2}
     version: 1.4.0
     engines: {node: '>= 16.0.0'}
     peerDependencies:
@@ -7555,7 +7555,7 @@ snapshots:
       level-filesystem: 1.2.0
       levelup: 0.18.6
 
-  react-native-libsodium@https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/632e13cd98520f5e04b64cb8ad3b70c746db395e(react-native@0.76.3(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
+  react-native-libsodium@https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/9f779e5ba63e90743421bc1e7460692f529fa2a2(react-native@0.76.3(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1):
     dependencies:
       '@noble/hashes': 1.6.1
       '@types/libsodium-wrappers': 0.7.14
@@ -7861,7 +7861,7 @@ snapshots:
       '@noble/hashes': 1.6.1
       buffer: 6.0.3
       ecdsa-secp256r1: 1.3.3
-      libsodium-wrappers-sumo: react-native-libsodium@https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/632e13cd98520f5e04b64cb8ad3b70c746db395e(react-native@0.76.3(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
+      libsodium-wrappers-sumo: react-native-libsodium@https://codeload.github.com/sairanjit/react-native-libsodium/tar.gz/9f779e5ba63e90743421bc1e7460692f529fa2a2(react-native@0.76.3(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
       mathjs: 12.4.3
       structured-headers: 0.5.0
     transitivePeerDependencies:

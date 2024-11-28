@@ -1,8 +1,9 @@
 import "./shim"
 import "./globals"
 import React from "react"
-import { Button, SafeAreaView, StatusBar, StyleSheet, View } from "react-native"
-import signify from "signify-ts"
+import { Button, StyleSheet, View } from "react-native"
+import signify, { Serder } from "signify-ts"
+import { assertOperations, resolveOobi, waitOperation } from "./utils"
 
 function App(): React.JSX.Element {
   const isReady = async () => {
@@ -18,134 +19,310 @@ function App(): React.JSX.Element {
     }
   }
 
-  const setupAllie = async () => {
+  // const setupAllie = async () => {
+  //   try {
+  //     await signify.ready()
+  //     const passcode = signify.randomPasscode()
+
+  //     console.log("Allie Passcode", passcode)
+
+  //     const url = "http://192.168.1.4:3801"
+
+  //     const bootUrl = "http://192.168.1.4:3803"
+
+  //     const allieClient = new signify.SignifyClient(
+  //       url,
+  //       passcode,
+  //       signify.Tier.low,
+  //       bootUrl
+  //     )
+
+  //     console.log("Allie Client created")
+
+  //     await allieClient.boot()
+
+  //     console.log("Allie Client booted")
+
+  //     await allieClient.connect()
+
+  //     console.log("Allie Client connected")
+
+  //     const allieClientState = await allieClient.state()
+
+  //     console.log(
+  //       "Allie Client connected. Client AID:",
+  //       allieClientState.controller.state.i,
+  //       "Agent AID: ",
+  //       allieClientState.agent.i
+  //     )
+
+  //     const oobiUrl =
+  //       "http://192.168.1.4:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller?name=Wan&tag=witness"
+  //     const oobiUrl1 =
+  //       "http://192.168.1.4:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller?name=Wes&tag=witness"
+  //     const oobiUrl2 =
+  //       "http://192.168.1.4:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller?name=Wil&tag=witness"
+
+  //     const op = await allieClient.oobis().resolve(oobiUrl)
+
+  //     console.log("Resolved OOBI 1", JSON.stringify(op, null, 2))
+
+  //     const op1 = await allieClient.oobis().resolve(oobiUrl1)
+
+  //     console.log("Resolved OOBI 2", JSON.stringify(op1, null, 2))
+
+  //     const op2 = await allieClient.oobis().resolve(oobiUrl2)
+
+  //     console.log("Resolved OOBI 3", JSON.stringify(op2, null, 2))
+
+  //     let icpResult1 = await allieClient.identifiers().create("aid1", {
+  //       transferable: true,
+  //       wits: [
+  //         "BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha",
+  //         "BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM",
+  //         "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX",
+  //       ],
+  //       toad: 3,
+  //       count: 1,
+  //       ncount: 1,
+  //       isith: "1",
+  //       nsith: "1",
+  //     })
+
+  //     console.log("Created AID", icpResult1)
+
+  //     const response = await icpResult1.op()
+  //     console.log("ICP Response", response)
+  //   } catch (error) {
+  //     console.log("Error in setupAllie", error)
+  //   }
+  // }
+
+  // const setupBrett = async () => {
+  //   try {
+  //     await signify.ready()
+  //     const passcode = signify.randomPasscode()
+
+  //     console.log("Brett Passcode", passcode)
+
+  //     const url = "http://192.168.1.4:3701"
+
+  //     const bootUrl = "http://192.168.1.4:3703"
+
+  //     const brettClient = new signify.SignifyClient(
+  //       url,
+  //       passcode,
+  //       signify.Tier.low,
+  //       bootUrl
+  //     )
+
+  //     console.log("Brett Client created")
+
+  //     await brettClient.boot()
+
+  //     console.log("Brett Client booted")
+
+  //     await brettClient.connect()
+
+  //     console.log("Brett Client connected")
+
+  //     const brettClientState = await brettClient.state()
+
+  //     console.log(
+  //       "Brett Client connected. Client AID:",
+  //       brettClientState.controller.state.i,
+  //       "Agent AID: ",
+  //       brettClientState.agent.i
+  //     )
+
+  //     const iUrls = [
+  //       "http://192.168.1.4:5645/oobi/BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE/controller?name=Wit&tag=witness",
+  //       "http://192.168.1.4:5646/oobi/BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP/controller?name=Wub&tag=witness",
+  //       "http://192.168.1.4:5647/oobi/BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM/controller?name=Wyz&tag=witness",
+  //     ]
+
+  //     for (let i = 0; i < iUrls.length; i++) {
+  //       const op = await brettClient.oobis().resolve(iUrls[i])
+
+  //       console.log("Resolved OOBI", i, JSON.stringify(op, null, 2))
+  //     }
+
+  //     let createOp = await (
+  //       await brettClient.identifiers().create("aid1", {
+  //         transferable: true,
+  //         wits: [
+  //           "BM35JN8XeJSEfpxopjn5jr7tAHCE5749f0OobhMLCorE",
+  //           "BIj15u5V11bkbtAxMA7gcNJZcax-7TgaBMLsQnMHpYHP",
+  //           "BF2rZTW79z4IXocYRQnjjsOuvFUQv-ptCf8Yltd7PfsM",
+  //         ],
+  //         toad: 3,
+  //         count: 1,
+  //         ncount: 1,
+  //         isith: "1",
+  //         nsith: "1",
+  //       })
+  //     ).op()
+
+  //     const op = await waitAndGetDoneOp(brettClient, createOp)
+
+  //     console.log("Operation", op)
+
+  //     const resp = await brettClient.identifiers().get("aid1")
+
+  //     console.log("Identifiers", resp)
+  //   } catch (error) {
+  //     console.log("Error in setupBrett", error)
+  //   }
+  // }
+
+  const fullTest = async () => {
     try {
+      const url = "http://192.168.1.4:3901"
+      const bootUrl = "http://192.168.1.4:3903"
+
       await signify.ready()
-      const passcode = signify.randomPasscode()
-
-      console.log("Allie Passcode", passcode)
-
-      const url = "http://192.168.1.28:3801"
-
-      const bootUrl = "http://192.168.1.28:3803"
-
-      const allieClient = new signify.SignifyClient(
+      const bran1 = signify.randomPasscode()
+      const bran2 = signify.randomPasscode()
+      const client1 = new signify.SignifyClient(
         url,
-        passcode,
+        bran1,
         signify.Tier.low,
         bootUrl
       )
-
-      console.log("Allie Client created")
-
-      await allieClient.boot()
-
-      console.log("Allie Client booted")
-
-      await allieClient.connect()
-
-      console.log("Allie Client connected")
-
-      const allieClientState = await allieClient.state()
-
+      const client2 = new signify.SignifyClient(
+        url,
+        bran2,
+        signify.Tier.low,
+        bootUrl
+      )
+      await client1.boot()
+      await client2.boot()
+      await client1.connect()
+      await client2.connect()
+      const state1 = await client1.state()
+      const state2 = await client2.state()
       console.log(
-        "Allie Client connected. Client AID:",
-        allieClientState.controller.state.i,
+        "Client 1 connected. Client AID:",
+        state1.controller.state.i,
         "Agent AID: ",
-        allieClientState.agent.i
+        state1.agent.i
+      )
+      console.log(
+        "Client 2 connected. Client AID:",
+        state2.controller.state.i,
+        "Agent AID: ",
+        state2.agent.i
       )
 
-      const oobiUrl =
-        "http://192.168.1.28:5642/oobi/BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha/controller?name=Wan&tag=witness"
-      const oobiUrl1 =
-        "http://192.168.1.28:5643/oobi/BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM/controller?name=Wes&tag=witness"
-      const oobiUrl2 =
-        "http://192.168.1.28:5644/oobi/BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX/controller?name=Wil&tag=witness"
+      // Generate challenge words
+      const challenge1_small = await client1.challenges().generate(128)
+      console.log("CHECK 1", challenge1_small.words.length === 12)
+      const challenge1_big = await client1.challenges().generate(256)
+      console.log("CHECK 2", challenge1_big.words.length === 24)
 
-      const op = await allieClient.oobis().resolve(oobiUrl)
-
-      console.log("Resolved OOBI 1", JSON.stringify(op, null, 2))
-
-      const op1 = await allieClient.oobis().resolve(oobiUrl1)
-
-      console.log("Resolved OOBI 2", JSON.stringify(op1, null, 2))
-
-      const op2 = await allieClient.oobis().resolve(oobiUrl2)
-
-      console.log("Resolved OOBI 3", JSON.stringify(op2, null, 2))
-
-      let icpResult1 = await allieClient.identifiers().create("aid1", {
-        toad: 1,
+      // Create two identifiers, one for each client
+      const icpResult1 = await client1.identifiers().create("alice", {
+        toad: 3,
         wits: [
           "BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha",
           "BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM",
           "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX",
         ],
-        transferable: true,
       })
-
-      // const icpResult1 = await allieClient.identifiers().create("delegator", {
-      //   toad: 3,
-      //   wits: [
-      //     "BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha",
-      //     "BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM",
-      //     "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX",
-      //   ],
-      // })
-    } catch (error) {
-      console.log("Error in setupAllie", error)
-    }
-  }
-
-  const setupBrett = async () => {
-    try {
-      await signify.ready()
-      const passcode = signify.randomPasscode()
-
-      console.log("Brett Passcode", passcode)
-
-      const url = "http://192.168.1.28:3701"
-
-      const bootUrl = "http://192.168.1.28:3703"
-
-      const allieClient = new signify.SignifyClient(
-        url,
-        passcode,
-        signify.Tier.low,
-        bootUrl
+      const { response: aid1 } = await waitOperation(
+        client1,
+        await icpResult1.op()
       )
+      const rpyResult1 = await client1
+        .identifiers()
+        .addEndRole("alice", "agent", client1!.agent!.pre)
+      await waitOperation(client1, await rpyResult1.op())
+      console.log("Alice's AID:", aid1.i)
 
-      console.log("Brett Client created")
-
-      await allieClient.boot()
-
-      console.log("Brett Client booted")
-
-      await allieClient.connect()
-
-      console.log("Brett Client connected")
-
-      const allieClientState = await allieClient.state()
-
-      console.log(
-        "Brett Client connected. Client AID:",
-        allieClientState.controller.state.i,
-        "Agent AID: ",
-        allieClientState.agent.i
+      const icpResult2 = await client2.identifiers().create("bob", {
+        toad: 3,
+        wits: [
+          "BBilc4-L3tFUnfM_wJr4S4OJanAv_VmF_dJNN6vkf2Ha",
+          "BLskRTInXnMxWaGqcpSyMgo0nYbalW99cGZESrz3zapM",
+          "BIKKuvBwpmDVA4Ds-EpL5bt9OqPzWPja2LigFYZN2YfX",
+        ],
+      })
+      const { response: aid2 } = await waitOperation(
+        client2,
+        await icpResult2.op()
       )
+      const rpyResult2 = await client2
+        .identifiers()
+        .addEndRole("bob", "agent", client2!.agent!.pre)
+      await waitOperation(client2, await rpyResult2.op())
+
+      // Exchenge OOBIs
+      const oobi1 = await client1.oobis().get("alice", "agent")
+      const oobi2 = await client2.oobis().get("bob", "agent")
+
+      await resolveOobi(client1, oobi2.oobis[0], "bob")
+      console.log("Client 1 resolved Bob's OOBI")
+      await resolveOobi(client2, oobi1.oobis[0], "alice")
+      console.log("Client 2 resolved Alice's OOBI")
+
+      // List Client 1 contacts
+      let contacts1 = await client1.contacts().list()
+      let bobContact = contacts1.find((contact) => contact.alias === "bob")
+      console.log("CHECK 3", bobContact?.alias === "bob")
+      console.log("CHECK 4", bobContact?.challenges?.length === 0)
+
+      // Bob responds to Alice challenge
+      await client2.challenges().respond("bob", aid1.i, challenge1_small.words)
+      console.log("Bob responded to Alice challenge with signed words")
+
+      // Alice verifies Bob's response
+      const verifyOperation = await waitOperation(
+        client1,
+        await client1.challenges().verify(aid2.i, challenge1_small.words)
+      )
+      console.log("Alice verified challenge response")
+
+      //Alice mark response as accepted
+      const verifyResponse = verifyOperation.response as {
+        exn: Record<string, unknown>
+      }
+      const exn = new Serder(verifyResponse.exn)
+
+      await client1.challenges().responded(aid2.i, exn.ked.d)
+      console.log("Alice marked challenge response as accepted")
+
+      // Check Bob's challenge in conctats
+      contacts1 = await client1.contacts().list()
+      bobContact = contacts1.find((contact) => contact.alias === "bob")
+
+      console.log("CHECK 5", Array.isArray(bobContact?.challenges))
+      console.log("CHECK 6", bobContact?.challenges[0].authenticated)
+
+      await assertOperations(client1, client2)
     } catch (error) {
-      console.log("Error in setupBrett", error)
+      console.log("Error in fullTest", error)
     }
   }
 
   return (
     <View style={styles.container}>
-      <Button title="isReady" onPress={isReady} />
-      <View style={{ height: 10 }} />
-      <Button title="Setup Allie" onPress={setupAllie} />
-      <View style={{ height: 10 }} />
-      <Button title="Setup brett" onPress={setupBrett} />
-      <StatusBar barStyle={"default"} />
+      {/* <Button title="isReady" onPress={isReady} /> */}
+      {/* <View style={styles.leftSide}>
+        <View style={{ height: 10 }} />
+        <View style={{ height: 10 }} />
+        <Button title="Setup Allie" onPress={setupAllie} />
+      </View>
+
+      <View style={styles.divider}>
+        <Button title="fullTest" onPress={fullTest} />
+      </View>
+
+      <View style={styles.rightSide}>
+        <View style={{ height: 10 }} />
+        <Button title="Setup brett" onPress={setupBrett} />
+      </View> */}
+
+      <Button title="Full challenge Test" onPress={fullTest} />
     </View>
   )
 }
@@ -153,8 +330,28 @@ function App(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#f0f0f0",
     alignItems: "center",
     justifyContent: "center",
+  },
+  leftSide: {
+    flex: 1,
+    backgroundColor: "#e6f2ff",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 20,
+  },
+  rightSide: {
+    flex: 1,
+    backgroundColor: "#fff2e6",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 20,
+  },
+  divider: {
+    width: 2,
+    backgroundColor: "#888",
   },
 })
 
