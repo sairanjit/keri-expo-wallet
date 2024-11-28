@@ -24,7 +24,7 @@
     "react-native": "0.76.3",
     "react-native-crypto": "^2.2.0",
     "react-native-level-fs": "^3.0.1",
-    "react-native-libsodium": "github:sairanjit/react-native-libsodium#a8614e495bd2737caf81b106240af63834e3bb12",
+    "react-native-libsodium": "github:sairanjit/react-native-libsodium#632e13cd98520f5e04b64cb8ad3b70c746db395e",
     "react-native-randombytes": "^3.6.1",
     "readable-stream": "1.0.33",
     "signify-ts": "github:sairanjit/signify-ts#bb6d50c01f87d862fab6254e90adf445cdb923fc",
@@ -39,7 +39,7 @@
   },
   "private": true,
   "resolutions": {
-    "libsodium-wrappers-sumo": "github:sairanjit/react-native-libsodium#a8614e495bd2737caf81b106240af63834e3bb12"
+    "libsodium-wrappers-sumo": "github:sairanjit/react-native-libsodium#632e13cd98520f5e04b64cb8ad3b70c746db395e"
   },
   "react-native": {
     "crypto": "react-native-crypto",
